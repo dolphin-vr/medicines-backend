@@ -6,19 +6,22 @@ import "dotenv/config";
 // import authRouter from "./routes/auth-router.js";
 // import userRouter from "./routes/user-router.js";
 import shopRouter from "./routes/api/shop-router.js";
+import drugRouter from "./routes/api/drug-router.js";
+import assortmentRouter from "./routes/api/assortment-router.js";
 
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
-app.use(logger("dev"));
+app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-// app.use(express.static("public"));
+app.use(express.static("public"));
 
 // app.use("/api/auth", authRouter);
-// app.use("/api/users", userRouter);
 app.use("/api/shops", shopRouter);
+app.use("/api/drugs", drugRouter);
+app.use("/api/assortment", assortmentRouter);
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {

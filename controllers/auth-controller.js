@@ -8,11 +8,8 @@ import sendEmail from "../helpers/sendEmail.js";
 const { JWT_SECRET, BASE_URL } = process.env;
 
 const makeToken = async (payload) => {
-   //  console.log("makeToken in = ", Date.now());
    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "720h" });
-   //  console.log("makeToken gen = ", Date.now());
    await User.findByIdAndUpdate(payload.id, { token });
-   //  console.log("makeToken out = ", Date.now());
    return token
 }
 
@@ -52,36 +49,27 @@ const refresh = async (req, res, next) => {
 };
 
 const remind = async (req, res, next) => {
-   //  console.log("authController.remind in = ", Date.now());
-   // console.log("BASE_URL='= ", BASE_URL);
    const {email}=req.body;
    const user=await User.findOne({email});
-   //  console.log("remind User.findOne done = ", Date.now());
    if (!user){
       return next(new HttpError(404, 'User not found'))
    }
    const token = await makeToken({ id: user.id });
-   // console.log('remind> token= ', token);
    const resetpasswdEmail = {
       to: email,
       subject: "WaterTrecker Password reset",
       html: `<p></p><a href="${BASE_URL}/reset/${token}" target="_blank">Click to reset your password</a><p></p>`,
    };
    await sendEmail(resetpasswdEmail);
-   //  console.log("sendEmail done = ", Date.now());
-   // console.log('reset url was sent')
    res.status(200).json({message: 'Password reset link was successfuly sent'});
-   //  console.log("authController.remind out = ", Date.now());
 
 }
 
 const reset = async (req, res, next) => {
-   // console.log('reset> email= ', req.user.email)
    if (req.user.email !== req.body.email){
       return next(new HttpError(401, "User not found"));
    }
    const { password } = req.body;
-   // console.log("reset> pwd = ", password);
    const hashPasswd = await bcrypt.hash(password, 10);
    await User.findByIdAndUpdate(req.user._id, {password: hashPasswd, token: "" });
    res.status(200).json({message: 'Password was changed successfuly'});

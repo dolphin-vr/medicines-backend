@@ -3,7 +3,6 @@ import { Schema, model } from "mongoose";
 import { handleSaveError, preUpdate } from "./hooks.js";
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/;
-const genderList = ["woman", "man"];
 
 const userSchema = new Schema(
   {
@@ -17,23 +16,21 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
       match: emailRegexp,
       unique: true,
+      required: [true, "Email is required"],
     },
-    gender: {
+    phone: {
       type: String,
-      enum: ["woman", "man"],
+      required: [true, "Set phone of record"],
     },
-    avatarURL: String,
+    address: {
+      type: String,
+      required: [true, "Set address of record"],
+    },
     token: {
       type: String,
       default: null,
-    },
-    waterNorma: { type: Number, min: 0, max: 15000, default: 0 },
-    date: {
-      type: String,
-      required: [true, "Set registration date"],
     },
     verify: {
       type: String,
@@ -57,10 +54,6 @@ export const SignUpSchema = Joi.object({
   password: Joi.string().required().min(8).max(48).messages({
     "any.required": "missing required field 'password'",
     "string.base": "'password' must be string",
-  }),
-  date: Joi.date().iso().required().messages({
-    "any.required": `missing required "date" field`,
-    "string.base": `"date" must be date`,
   }),
 });
 
@@ -113,14 +106,7 @@ export const UpdateUserInfoSchema = Joi.object({
   newPassword: Joi.string().min(8).max(48).messages({
     "string.base": "{#label} must be string",
   }),
-  gender: Joi.string().valid(...genderList),
 });
 
-export const UpdateWaterNormaSchema = Joi.object({
-  waterNorma: Joi.number().min(1).max(15000).required().messages({
-    "any.required": "missing required {#label} field",
-    "number.base": "{#label} must be number",
-  }),
-});
 
 export default User;
