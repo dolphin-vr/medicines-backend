@@ -6,9 +6,8 @@ const statusList = ["carting", "purchased", "processing", "complete"];
 const orderSchema = new Schema(
   {
     order: {
-      type: Number,
+      type: String,
       required: [true, "Set number of order"],
-      min: 0,
     },
     user: {
       type: Schema.Types.ObjectId,
@@ -61,13 +60,3 @@ export const orderAddSchema = Joi.object({
 });
 
 export default Order;
-
-
-  // price: Joi.number().required().min(0).messages({
-  //   "any.required": "missing required 'price' field",
-  //   "string.base": "'price' must be number",
-  // }),
-  // amount: Joi.number().required().min(0).messages({
-  //   "any.required": "missing required 'amount' field",
-  //   "string.base": "'amount' must be number",
-  // }),

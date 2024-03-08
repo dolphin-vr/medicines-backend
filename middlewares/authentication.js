@@ -15,10 +15,8 @@ const authentication = async (req, res, next)=>{
       return next(new HttpError(401));
    }
    try {
-      // console.log('authchk> token= ', token);
       const {id}=jwt.verify(token, JWT_SECRET);
       const user = await User.findById(id);
-      // console.log('user= ', user)
       if (!user || !user.token || user.token !== token){
          return next(new HttpError(401, "User not found"));
       }
