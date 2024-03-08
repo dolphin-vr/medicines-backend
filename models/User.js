@@ -6,17 +6,17 @@ const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/;
 
 const userSchema = new Schema(
   {
-    username: {
+    name: {
       type: String,
       minLength: 3,
     },
     password: {
       type: String,
-      required: [true, "Set password for user"],
+      // required: [true, "Set password for user"],
     },
     email: {
       type: String,
-      match: emailRegexp,
+      // match: emailRegexp,
       unique: true,
       required: [true, "Email is required"],
     },
@@ -92,21 +92,5 @@ export const VerifySchema = Joi.object({
     "string.pattern.base": "'email' must be valid e-mail",
   }),
 });
-
-export const UpdateUserInfoSchema = Joi.object({
-  username: Joi.string().min(3).messages({
-    "string.base": "{#label} must be string",
-  }),
-  email: Joi.string().pattern(emailRegexp).messages({
-    "string.pattern.base": "{#label} must be valid e-mail",
-  }),
-  password: Joi.string().min(8).max(48).messages({
-    "string.base": "{#label} must be string",
-  }),
-  newPassword: Joi.string().min(8).max(48).messages({
-    "string.base": "{#label} must be string",
-  }),
-});
-
 
 export default User;

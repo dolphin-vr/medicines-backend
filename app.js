@@ -4,10 +4,10 @@ import cors from "cors";
 import "dotenv/config";
 
 // import authRouter from "./routes/auth-router.js";
-// import userRouter from "./routes/user-router.js";
 import shopRouter from "./routes/api/shop-router.js";
 import drugRouter from "./routes/api/drug-router.js";
 import assortmentRouter from "./routes/api/assortment-router.js";
+import orderRouter from "./routes/api/order-router.js";
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.use(express.static("public"));
 app.use("/api/shops", shopRouter);
 app.use("/api/drugs", drugRouter);
 app.use("/api/assortment", assortmentRouter);
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/order", orderRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

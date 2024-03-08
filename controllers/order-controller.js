@@ -1,9 +1,10 @@
 import { controlWrapper } from "../decorators/index.js";
 import Order from "../models/Order.js";
 import { HttpError } from "../helpers/HttpError.js";
+import orderNum from "../helpers/orderNum.js";
 
 const addOrder = async (req, res, next) => {
-  const result = await Order.create({ ...req.body });
+  const result = await Order.create({ order: orderNum(), user: req.user._id, shop: req.body.shop, goods: req.body.goods, status: "purchased" });
   res.status(201).json(result);
 };
 
